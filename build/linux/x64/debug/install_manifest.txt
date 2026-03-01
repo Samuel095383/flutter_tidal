@@ -1,0 +1,12 @@
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/hifi_test_client
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/icudtl.dat
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/lib/libflutter_linux_gtk.so
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/kernel_blob.bin
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/AssetManifest.bin
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/FontManifest.json
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/shaders/ink_sparkle.frag
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/shaders/stretch_effect.frag
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/NativeAssetsManifest.json
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/NOTICES.Z
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/version.json
+/home/samuel/projects/flutter_tidal/build/linux/x64/debug/bundle/data/flutter_assets/fonts/MaterialIcons-Regular.otf

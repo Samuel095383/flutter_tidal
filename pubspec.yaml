@@ -1,4 +1,4 @@
-name: hifi_test_client
+name: flutter_tidal
 description: Minimal Flutter app to store an API base URL and test calls.
 publish_to: "none"
 
