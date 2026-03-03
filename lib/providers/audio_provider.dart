@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_service/audio_service.dart';
@@ -121,11 +123,9 @@ class AudioProvider extends ChangeNotifier {
 
     if (_shuffleEnabled) {
       if (_queue.length <= 1) return;
-      int nextIndex;
-      do {
-        nextIndex = (DateTime.now().microsecondsSinceEpoch % _queue.length);
-      } while (nextIndex == _currentIndex && _queue.length > 1);
-      _currentIndex = nextIndex;
+      final validIndices = List.generate(_queue.length, (i) => i)
+        ..remove(_currentIndex);
+      _currentIndex = validIndices[Random().nextInt(validIndices.length)];
       await playTrack(_queue[_currentIndex]);
       return;
     }
