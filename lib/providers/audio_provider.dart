@@ -86,7 +86,7 @@ class AudioProvider extends ChangeNotifier {
             ? Uri.parse(track.album.coverUrl!)
             : null,
       );
-      _audioHandler.mediaItem.add(mediaItem);
+      (_audioHandler as BaseAudioHandler).mediaItem.add(mediaItem);
       await _player.setUrl(url);
       _player.play();
     } catch (e) {
