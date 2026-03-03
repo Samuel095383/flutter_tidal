@@ -12,6 +12,11 @@ dependencies:
     sdk: flutter
   http: ^1.2.2
   shared_preferences: ^2.2.3
+  just_audio: ^0.9.40
+  audio_service: ^0.18.15
+  audio_session: ^0.1.21
+  cached_network_image: ^3.4.1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
