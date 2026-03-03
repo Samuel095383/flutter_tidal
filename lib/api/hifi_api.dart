@@ -3,8 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_tidal/models/track.dart';
 
 class HifiApi {
-  HifiApi({required this.baseUrl});
+  HifiApi({required this.baseUrl, http.Client? client})
+      : _client = client ?? http.Client();
   final String baseUrl;
+  final http.Client _client;
 
   Uri _uri(String path, [Map<String, String>? queryParams]) {
     final p = path.startsWith('/') ? path : '/$path';
@@ -17,7 +19,7 @@ class HifiApi {
 
   Future<Map<String, dynamic>> _get(String path,
       [Map<String, String>? params]) async {
-    final resp = await http.get(_uri(path, params));
+    final resp = await _client.get(_uri(path, params));
     if (resp.statusCode < 200 || resp.statusCode >= 300) {
       throw Exception('HTTP ${resp.statusCode}: ${resp.body}');
     }
@@ -50,9 +52,36 @@ class HifiApi {
     return Track.fromJson(data);
   }
 
-  /// Get track stream URL - returns the direct audio URL
+  static const _qualityFallbackOrder = [
+    'HI_RES_LOSSLESS',
+    'HI_RES',
+    'LOSSLESS',
+    'HIGH',
+    'LOW',
+  ];
+
+  /// Get track stream URL - returns the direct audio URL.
+  /// Falls back to lower quality tiers on HTTP 403 errors.
   Future<String> getStreamUrl(int trackId,
       {String quality = 'LOSSLESS'}) async {
+    final startIndex = _qualityFallbackOrder.indexOf(quality);
+    final qualities = startIndex >= 0
+        ? _qualityFallbackOrder.sublist(startIndex)
+        : [quality, ..._qualityFallbackOrder];
+
+    Object? lastError;
+    for (final q in qualities) {
+      try {
+        return await _getStreamUrlWithQuality(trackId, q);
+      } catch (e) {
+        lastError = e;
+        if (!e.toString().contains('HTTP 403')) rethrow;
+      }
+    }
+    throw lastError!;
+  }
+
+  Future<String> _getStreamUrlWithQuality(int trackId, String quality) async {
     final resp =
         await _get('/track/', {'id': trackId.toString(), 'quality': quality});
     final data = resp['data'] as Map<String, dynamic>?;
