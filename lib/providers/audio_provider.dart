@@ -4,6 +4,8 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter_tidal/api/hifi_api.dart';
 import 'package:flutter_tidal/models/track.dart';
 
+enum RepeatMode { off, all, one }
+
 class AudioProvider extends ChangeNotifier {
   late final AudioHandler _audioHandler;
   AudioPlayer get _player => (_audioHandler as _AppAudioHandler)._player;
@@ -12,11 +14,15 @@ class AudioProvider extends ChangeNotifier {
   final List<Track> _queue = [];
   int _currentIndex = -1;
   bool _isInitialized = false;
+  bool _shuffleEnabled = false;
+  RepeatMode _repeatMode = RepeatMode.off;
 
   Track? get currentTrack => _currentTrack;
   List<Track> get queue => List.unmodifiable(_queue);
   int get currentIndex => _currentIndex;
   bool get isInitialized => _isInitialized;
+  bool get shuffleEnabled => _shuffleEnabled;
+  RepeatMode get repeatMode => _repeatMode;
 
   bool get isPlaying => _isInitialized && _player.playing;
   Duration get position =>
@@ -51,7 +57,7 @@ class AudioProvider extends ChangeNotifier {
     _player.positionStream.listen((_) {});
     _player.processingStateStream.listen((state) {
       if (state == ProcessingState.completed) {
-        skipNext();
+        _onTrackCompleted();
       }
     });
     notifyListeners();
@@ -111,7 +117,26 @@ class AudioProvider extends ChangeNotifier {
   }
 
   Future<void> skipNext() async {
-    if (_queue.isEmpty || _currentIndex >= _queue.length - 1) return;
+    if (_queue.isEmpty) return;
+
+    if (_shuffleEnabled) {
+      if (_queue.length <= 1) return;
+      int nextIndex;
+      do {
+        nextIndex = (DateTime.now().microsecondsSinceEpoch % _queue.length);
+      } while (nextIndex == _currentIndex && _queue.length > 1);
+      _currentIndex = nextIndex;
+      await playTrack(_queue[_currentIndex]);
+      return;
+    }
+
+    if (_currentIndex >= _queue.length - 1) {
+      if (_repeatMode == RepeatMode.all) {
+        _currentIndex = 0;
+        await playTrack(_queue[_currentIndex]);
+      }
+      return;
+    }
     _currentIndex++;
     await playTrack(_queue[_currentIndex]);
   }
@@ -131,6 +156,32 @@ class AudioProvider extends ChangeNotifier {
     await _player.stop();
     _currentTrack = null;
     notifyListeners();
+  }
+
+  void toggleShuffle() {
+    _shuffleEnabled = !_shuffleEnabled;
+    notifyListeners();
+  }
+
+  void toggleRepeat() {
+    switch (_repeatMode) {
+      case RepeatMode.off:
+        _repeatMode = RepeatMode.all;
+      case RepeatMode.all:
+        _repeatMode = RepeatMode.one;
+      case RepeatMode.one:
+        _repeatMode = RepeatMode.off;
+    }
+    notifyListeners();
+  }
+
+  Future<void> _onTrackCompleted() async {
+    if (_repeatMode == RepeatMode.one && _currentTrack != null) {
+      await seek(Duration.zero);
+      _player.play();
+      return;
+    }
+    await skipNext();
   }
 
   @override
