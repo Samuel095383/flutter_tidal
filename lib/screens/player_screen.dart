@@ -241,8 +241,9 @@ class PlayerScreen extends StatelessWidget {
                         IconButton(
                           icon: const Icon(Icons.shuffle_rounded),
                           iconSize: 24,
-                          color: theme.textTheme.bodySmall?.color,
-                          onPressed: () {},
+                          color: theme.textTheme.bodySmall?.color
+                              ?.withValues(alpha: 0.4),
+                          onPressed: null,
                         ),
                         IconButton(
                           icon: const Icon(
@@ -288,8 +289,9 @@ class PlayerScreen extends StatelessWidget {
                         IconButton(
                           icon: const Icon(Icons.repeat_rounded),
                           iconSize: 24,
-                          color: theme.textTheme.bodySmall?.color,
-                          onPressed: () {},
+                          color: theme.textTheme.bodySmall?.color
+                              ?.withValues(alpha: 0.4),
+                          onPressed: null,
                         ),
                       ],
                     );

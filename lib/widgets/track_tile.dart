@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_tidal/models/track.dart';
-import 'package:flutter_tidal/models/album.dart';
 
 class TrackTile extends StatelessWidget {
   const TrackTile({
@@ -20,13 +19,6 @@ class TrackTile extends StatelessWidget {
   final bool isFavorite;
   final bool isPlaying;
   final Widget? trailing;
-
-  FavoriteAlbum get _favoriteAlbum => FavoriteAlbum(
-        id: track.album.id,
-        title: track.album.title,
-        cover: track.album.cover,
-        artistName: track.artistNames,
-      );
 
   @override
   Widget build(BuildContext context) {
