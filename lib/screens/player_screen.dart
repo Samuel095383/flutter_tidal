@@ -241,9 +241,11 @@ class PlayerScreen extends StatelessWidget {
                         IconButton(
                           icon: const Icon(Icons.shuffle_rounded),
                           iconSize: 24,
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withValues(alpha: 0.4),
-                          onPressed: null,
+                          color: audio.shuffleEnabled
+                              ? theme.colorScheme.primary
+                              : theme.textTheme.bodySmall?.color
+                                  ?.withValues(alpha: 0.4),
+                          onPressed: audio.toggleShuffle,
                         ),
                         IconButton(
                           icon: const Icon(
@@ -287,11 +289,17 @@ class PlayerScreen extends StatelessWidget {
                           onPressed: audio.skipNext,
                         ),
                         IconButton(
-                          icon: const Icon(Icons.repeat_rounded),
+                          icon: Icon(
+                            audio.repeatMode == RepeatMode.one
+                                ? Icons.repeat_one_rounded
+                                : Icons.repeat_rounded,
+                          ),
                           iconSize: 24,
-                          color: theme.textTheme.bodySmall?.color
-                              ?.withValues(alpha: 0.4),
-                          onPressed: null,
+                          color: audio.repeatMode != RepeatMode.off
+                              ? theme.colorScheme.primary
+                              : theme.textTheme.bodySmall?.color
+                                  ?.withValues(alpha: 0.4),
+                          onPressed: audio.toggleRepeat,
                         ),
                       ],
                     );

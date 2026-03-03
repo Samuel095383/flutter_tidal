@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_tidal/models/track.dart';
 import 'package:flutter_tidal/models/album.dart';
+import 'package:flutter_tidal/providers/audio_provider.dart';
 
 void main() {
   group('Track model', () {
@@ -96,6 +97,19 @@ void main() {
 
       expect(a, equals(b));
       expect(a, isNot(equals(c)));
+    });
+  });
+
+  group('RepeatMode', () {
+    test('has three values: off, all, one', () {
+      expect(RepeatMode.values.length, 3);
+      expect(RepeatMode.values, contains(RepeatMode.off));
+      expect(RepeatMode.values, contains(RepeatMode.all));
+      expect(RepeatMode.values, contains(RepeatMode.one));
+    });
+
+    test('off is the first value (default)', () {
+      expect(RepeatMode.values.first, RepeatMode.off);
     });
   });
 }
